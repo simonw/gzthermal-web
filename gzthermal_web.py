@@ -1,9 +1,14 @@
 from sanic import Sanic
 from sanic import response
+import aiohttp
 import os
-import requests
 import subprocess
 import tempfile
+
+OPTIONS = (
+    'e', 's', 'm', 'l', 'n', 'w', 'b', 'z', 'g'
+)
+
 
 INDEX = '''
 <html>
@@ -14,7 +19,7 @@ INDEX = '''
 <body>
 <h1>gzthermal-web</h1>
 
-<p>A simple web application wrapping 
+<p>A simple web application wrapping
     <a href="https://encode.ru/threads/1889-gzthermal-pseudo-thermal-view-of-Gzip-Deflate-compression-efficiency">gzthermal by caveman on encode.ru</a>
 </p>
 
@@ -33,18 +38,21 @@ INDEX = '''
 '''
 
 
-def run_gzthermal(url, args=None):
+async def run_gzthermal(url, args=None):
     args = args or []
     tmp = tempfile.TemporaryDirectory()
     os.chdir(tmp.name)
     try:
-        r = requests.get(url, stream=True)
-        gzipped = r.raw.read()
-        open('tmp.gz', 'wb').write(gzipped)
-        subprocess.call(
+        async with aiohttp.ClientSession(auto_decompress=False) as session:
+            async with session.get(url) as response:
+                gzipped = await response.read()
+                open('tmp.gz', 'wb').write(gzipped)
+
+        subprocess.run(
             ['/app/gzthermal_04c_linux64'] +
             args +
-            ['tmp.gz']
+            ['tmp.gz'],
+            timeout=1
         )
         png = open('gzthermal-result.png', 'rb').read()
     finally:
@@ -60,9 +68,10 @@ async def handle_request(request):
     url = request.args.getlist('url')
     if url:
         args = []
-        if request.args.get('z'):
-            args = ['-z']
-        data = run_gzthermal(url[0], args)
+        for option in OPTIONS:
+            if request.args.get(option):
+                args = ['-{}'.format(option)]
+        data = await run_gzthermal(url[0], args)
         return response.raw(data, content_type='image/png')
     else:
         return response.html(INDEX)
