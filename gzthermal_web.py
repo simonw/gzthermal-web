@@ -67,11 +67,17 @@ app = Sanic(__name__)
 async def handle_request(request):
     url = request.args.getlist('url')
     if url:
+        url = url[0]
         args = []
         for option in OPTIONS:
             if request.args.get(option):
                 args = ['-{}'.format(option)]
-        data = await run_gzthermal(url[0], args)
+        if (
+            not url.startswith('http://') and
+            not url.startswith('https://')
+        ):
+            url = 'http://' + url
+        data = await run_gzthermal(url, args)
         return response.raw(data, content_type='image/png')
     else:
         return response.html(INDEX)
