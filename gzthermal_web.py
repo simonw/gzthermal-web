@@ -8,6 +8,7 @@ import tempfile
 OPTIONS = (
     'e', 's', 'm', 'l', 'n', 'w', 'b', 'z', 'g'
 )
+TIMEOUT = 3
 
 
 INDEX = '''
@@ -52,7 +53,7 @@ async def run_gzthermal(url, args=None):
             ['/app/gzthermal_04c_linux64'] +
             args +
             ['tmp.gz'],
-            timeout=1
+            timeout=TIMEOUT,
         )
         png = open('gzthermal-result.png', 'rb').read()
     finally:
