@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "gzthermal_web.py",
+            "use": "@now/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "(.*)",
+            "dest": "gzthermal_web.py"
+        }
+    ]
+}

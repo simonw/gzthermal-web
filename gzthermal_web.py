@@ -37,6 +37,7 @@ INDEX = '''
 
 </html>
 '''
+GZTHERMAL = os.path.realpath(os.path.join(os.path.dirname(__file__), 'gzthermal_04c_linux64'))
 
 
 async def run_gzthermal(url, args=None):
@@ -50,7 +51,7 @@ async def run_gzthermal(url, args=None):
                 open('tmp.gz', 'wb').write(gzipped)
 
         subprocess.run(
-            ['/app/gzthermal_04c_linux64'] +
+            [GZTHERMAL] +
             args +
             ['tmp.gz'],
             timeout=TIMEOUT,
