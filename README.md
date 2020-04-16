@@ -2,7 +2,7 @@
 
 Hosted at https://gzthermal.now.sh
 
-A web interface to [gzthermal by caveman on encode.ru](https://encode.ru/threads/1889-gzthermal-pseudo-thermal-view-of-Gzip-Deflate-compression-efficiency)
+A web interface to [gzthermal by caveman on encode.su](https://encode.su/threads/1889-gzthermal-pseudo-thermal-view-of-Gzip-Deflate-compression-efficiency) (previously encode.ru)
 
 Inspired by [Of SVG, Minification and Gzip](https://blog.usejournal.com/of-svg-minification-and-gzip-21cd26a5d007) by Anton Khlynovskiy.
 
